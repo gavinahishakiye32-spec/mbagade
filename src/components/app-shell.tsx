@@ -21,6 +21,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Avatar, Badge, LinkButton, ToastHost } from "@/components/ui";
 import { useSession } from "@/components/session-context";
+import { InstallPrompt } from "@/components/install-prompt";
 
 function TopBar() {
   const { user } = useSession();
@@ -78,6 +79,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <TopBar />
       <main className="mx-auto max-w-6xl px-0 md:px-4">{children}</main>
 
+      {/* Mobile install prompt */}
+      <div className="px-4 pb-2 md:hidden">
+        <InstallPrompt />
+      </div>
+
       {/* Desktop sidebar */}
       <aside className="fixed bottom-0 left-0 top-14 z-40 hidden w-56 flex-col gap-1 border-r border-border bg-surface p-3 md:flex">
         {[
@@ -106,7 +112,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </Link>
           );
         })}
-        <div className="mt-auto border-t border-border pt-3">
+        <div className="mt-auto space-y-3">
+          <div className="hidden md:block">
+            <InstallPrompt />
+          </div>
+          <div className="border-t border-border pt-3">
           {user ? (
             <Link href={`/u/${user.username}`} className="flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-surface-2">
               <Avatar src={user.avatarUrl} name={user.name} size={32} />
@@ -118,6 +128,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           ) : (
             <LinkButton href="/login" className="w-full">Log in</LinkButton>
           )}
+          </div>
         </div>
       </aside>
 

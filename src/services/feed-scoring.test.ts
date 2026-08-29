@@ -56,6 +56,42 @@ describe("computePostScore", () => {
     expect(local).toBeGreaterThan(plain);
   });
 
+  it("personalizes: a relevant + local post outranks a higher-engagement irrelevant rival", () => {
+    // Higher raw engagement (~3x), but from an unrelated category / different city.
+    const rival = computePostScore({
+      ...base,
+      likes: 120,
+      comments: 18,
+      shares: 6,
+      saves: 9,
+      views: 2400,
+    });
+    // Less engagement, but in the viewer's top category and same city.
+    const relevant = computePostScore({
+      ...base,
+      likes: 40,
+      comments: 6,
+      shares: 2,
+      saves: 3,
+      views: 400,
+      categoryAffinity: 1,
+      sameCity: true,
+    });
+    expect(relevant).toBeGreaterThan(rival);
+
+    // But genuine virality still wins — personalization re-ranks the mid-field
+    // without suppressing content that is truly popular.
+    const viral = computePostScore({
+      ...base,
+      likes: 400,
+      comments: 60,
+      shares: 20,
+      saves: 30,
+      views: 8000,
+    });
+    expect(viral).toBeGreaterThan(relevant);
+  });
+
   it("is deterministic", () => {
     expect(computePostScore(base)).toBe(computePostScore(base));
   });

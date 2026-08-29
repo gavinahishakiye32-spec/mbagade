@@ -1,0 +1,53 @@
+# BuyBuy — full stack: app + MongoDB. 
+# Quick start:  cp .env.example .env.local   AND   docker compose up --build
+# Then seed demo data:  docker compose exec app npm run seed
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: buybuy:latest
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      MONGODB_URI: mongodb://mongo:27017/buybuy
+      AUTH_SECRET: ${AUTH_SECRET:?set AUTH_SECRET in .env.local}
+      APP_URL: ${APP_URL:-http://localhost:3000}
+      MEDIA_STORAGE_DRIVER: local
+      ACCESS_MODE: ${ACCESS_MODE:-public}
+      # Optional integrations are passed through when provided in .env.local:
+      PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-auto}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      AI_API_KEY: ${AI_API_KEY:-}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      FACEBOOK_CLIENT_ID: ${FACEBOOK_CLIENT_ID:-}
+      FACEBOOK_CLIENT_SECRET: ${FACEBOOK_CLIENT_SECRET:-}
+    volumes:
+      - uploads:/app/.data/uploads
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 }).ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mongo-data:
+  uploads:

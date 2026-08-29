@@ -76,8 +76,8 @@ export function computePostScore(input: ScoreInput): number {
   // New-business discovery boost: strong early, fades over 30 days of posting history.
   const newBoost = input.newBusiness ? 2.25 : 1;
 
-  const affinity = 1 + 0.35 * (input.categoryAffinity ?? 0);
-  const local = input.sameCity ? 1.15 : 1;
+  const affinity = 1 + 0.9 * (input.categoryAffinity ?? 0);
+  const local = input.sameCity ? 1.5 : 1;
 
   // Reports suppress distribution hard.
   const penalty = Math.max(0, 1 - input.reports * 0.25);

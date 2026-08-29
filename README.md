@@ -28,15 +28,28 @@ npm run dev                       # http://localhost:3000
 | Business | `amara@buybuy.demo`   |
 | Admin    | `admin@buybuy.demo`   |
 
+### Run with Docker (whole stack incl. MongoDB)
+
+```bash
+cp .env.example .env.local     # add an AUTH_SECRET (e.g. openssl rand -hex 32)
+docker compose up -d --build   # app on :3000 + MongoDB + persistent uploads volume
+docker compose exec app npm run seed   # seed demo data
+```
+
+The image is a slim, non-root, standalone Next.js server. Secrets are provided
+at runtime via compose and are never baked into image layers.
+
 ### Scripts
 
-| Command         | What it does                              |
-| --------------- | ----------------------------------------- |
-| `npm run dev`   | Dev server                                |
-| `npm run build` | Production build                          |
-| `npm start`     | Serve the production build                |
-| `npm test`      | Unit tests (feed scoring, permissions, …) |
-| `npm run seed`  | Reset + reseed demo data                  |
+| Command              | What it does                                  |
+| -------------------- | --------------------------------------------- |
+| `npm run dev`        | Dev server                                    |
+| `npm run build`      | Production build (standalone output for Docker)|
+| `npm start`          | Serve the production build                    |
+| `npm test`           | Unit tests (feed scoring, permissions, …)     |
+| `npm run test:watch` | Unit tests in watch mode                      |
+| `npm run test:coverage` | Unit tests with coverage report            |
+| `npm run seed`       | Reset + reseed demo data                      |
 
 > **Production note:** `AUTH_SECRET` is **required** when `NODE_ENV=production`. The server refuses to sign sessions without it.
 >

@@ -1,0 +1,22 @@
+# Dependencies
+node_modules
+npm-debug.log*
+
+# Next.js build output
+.next
+out
+build
+*.tsbuildinfo
+
+# Local media storage & env (never bake secrets or uploads into an image)
+.data
+.env
+.env.local
+.env.*.local
+
+# Misc
+.git
+.gitignore
+README.md
+coverage
+.DS_Store
