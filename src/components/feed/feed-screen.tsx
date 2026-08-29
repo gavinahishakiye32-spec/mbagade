@@ -17,7 +17,7 @@ const TABS = [
 type TabKey = (typeof TABS)[number]["key"];
 
 interface FeedResponse {
-  posts: PostView[];
+  items: PostView[];
   nextCursor: string | null;
 }
 
@@ -50,7 +50,7 @@ export function FeedScreen() {
           }
         }
         const d = await apiFetch<FeedResponse>(`/api/feed?${params}`);
-        setPosts((prev) => (cursorStr ? [...prev, ...d.posts] : d.posts));
+        setPosts((prev) => (cursorStr ? [...prev, ...d.items] : d.items));
         setCursor(d.nextCursor);
       } catch (e) {
         setError((e as Error).message);

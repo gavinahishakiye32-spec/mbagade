@@ -7,7 +7,7 @@ import { FeedItem } from "@/components/feed/feed-item";
 import { EmptyState, ErrorState, LinkButton, LoadingBlock } from "@/components/ui";
 
 interface FeedResponse {
-  posts: PostView[];
+  items: PostView[];
   nextCursor: string | null;
 }
 
@@ -33,7 +33,7 @@ export function ReelsScreen() {
       const params = new URLSearchParams({ tab: "reels", limit: "6" });
       if (cursorStr) params.set("cursor", cursorStr);
       const d = await apiFetch<FeedResponse>(`/api/feed?${params}`);
-      setPosts((prev) => (cursorStr ? [...prev, ...d.posts] : d.posts));
+      setPosts((prev) => (cursorStr ? [...prev, ...d.items] : d.items));
       setCursor(d.nextCursor);
     } catch (e) {
       setError((e as Error).message);
