@@ -9,9 +9,9 @@ import { formatCount } from "@/lib/utils";
 import type { PostView } from "@/types";
 
 export default function SavedPage() {
-  const state = useApi<{ posts: PostView[] }>("/api/feed?tab=saved");
+  const state = useApi<{ items: PostView[] }>("/api/feed?tab=saved");
   const [posts, setPosts] = useState<PostView[] | null>(null);
-  if (state.data && posts === null) setPosts(state.data.posts);
+  if (state.data && posts === null) setPosts(state.data.items);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-4">
